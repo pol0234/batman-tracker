@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bat-Database: Complete Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --bat-gold: #fbbf24;
+            --bat-dark: #0a0a0a;
+            --bat-card: #151515;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bat-dark); 
+            color: #e5e7eb; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        .bat-font { font-family: 'Orbitron', sans-serif; }
+
+        .bat-card { 
+            background: linear-gradient(145deg, #181818, #0d0d0d); 
+            border: 1px solid #222; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bat-card.is-read { 
+            border-color: var(--bat-gold); 
+            background: linear-gradient(145deg, #1a1608, #0a0a0a);
+            opacity: 0.7;
+        }
+
+        .type-tag { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; }
+        .tag-k { background: #1e3a8a; color: #60a5fa; } /* Hlavný kánon */
+        .tag-s { background: #4c1d95; color: #c084fc; } /* Samostatné */
+        .tag-r { background: #7f1d1d; color: #f87171; } /* Reštart */
+        
+        input[type="checkbox"] { 
+            appearance: none; min-width: 26px; height: 26px; 
+            border: 2px solid #444; border-radius: 6px; 
+            background: #111; cursor: pointer; position: relative; 
+        }
+        input[type="checkbox"]:checked { background: var(--bat-gold); border-color: var(--bat-gold); }
+        input[type="checkbox"]:checked::after { 
+            content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; 
+            color: black; font-size: 14px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+        }
+
+        .progress-sticky {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222;
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <div class="progress-sticky py-4 px-4 shadow-2xl">
+        <div class="max-w-2xl mx-auto flex items-center justify-between">
+            <div>
+                <h1 class="bat-font text-lg font-black tracking-tighter text-amber-500 italic">BAT-DATABASE</h1>
+                <p id="stats-text" class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">0 / 0 TITULOV</p>
+            </div>
+            <div class="text-right">
+                <div id="perc-display" class="bat-font text-2xl font-black text-white">0%</div>
+                <div class="w-32 h-1 bg-zinc-800 rounded-full mt-1 overflow-hidden">
+                    <div id="perc-bar" class="h-full bg-amber-500 transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-2xl mx-auto px-4 mt-8">
+        <div id="content" class="space-y-12">
+            <!-- Injected by JS -->
+        </div>
+    </div>
+
+    <script>
+        const sections = [
+            {
+                title: "Era 1: Začiatok Konca",
+                desc: "Tréning a prvý rok v Gothame.",
+                books: [
+                    { id: "1", title: "The Man Who Falls", type: "k", conn: "Prequel", info: "Bruceov pôvod a cesta po svete. Inšpirácia pre Batman Begins." },
+                    { id: "2", title: "The Knight", type: "k", conn: "Moderný Prequel", info: "Detailný pohľad na Bruceov tréning pred Year One." },
+                    { id: "3", title: "Year One", type: "k", conn: "Základ kánonu", info: "Máš hotovo! Bruceov prvý rok a zrod spojenectva s Gordonom." },
+                    { id: "4", title: "The Imposter", type: "s", conn: "Elseworlds", info: "Realistická detektívka mimo hlavný vesmír. Temný a surový pohľad." },
+                    { id: "5", title: "Shaman", type: "k", conn: "Legends of the Dark Knight", info: "Nadväzuje priamo na Year One. Batman sa učí o mystike." }
+                ]
+            },
+            {
+                title: "Era 2: Temní Legendy",
+                desc: "Prvé strety s farebným zločinom a pád mafie.",
+                books: [
+                    { id: "6", title: "Night Cries", type: "s", conn: "Standalone", info: "Temná, dospelá dráma o zneužívaní a rodine." },
+                    { id: "7", title: "Batman and the Monster Men", type: "k", conn: "Priame pokračovanie Year One", info: "Hugo Strange a prvé mutantné hrozby." },
+                    { id: "8", title: "Batman and the Mad Monk", type: "k", conn: "Pokračovanie Monster Men", info: "Batman čelí nadprirodzenému kultu." },
+                    { id: "9", title: "Snow", type: "k", conn: "Legends of the Dark Knight", info: "Moderný pôvod Mr. Freezea." },
+                    { id: "10", title: "The Man Who Laughs", type: "k", conn: "Nadväzuje na Year One", info: "Prvé, definitívne stretnutie Batmana s Jokerom." },
+                    { id: "11", title: "Gothic", type: "k", conn: "Rané roky", info: "Hororový príbeh z Batmanovej minulosti." },
+                    { id: "12", title: "Venom", type: "k", conn: "Zlomový bod", info: "Batman podľahne droge po zlyhaní. Pripravuje pôdu pre Banea." },
+                    { id: "13", title: "Prey", type: "k", conn: "Legends of the Dark Knight", info: "Hugo Strange a prvá vlna Bat-paranoje." },
+                    { id: "14", title: "The Haunted Knight", type: "s", conn: "Halloweenske antológie", info: "Tri krátke príbehy od tvorcov Long Halloween." },
+                    { id: "15", title: "The Long Halloween", type: "k", conn: "Centrálny epos", info: "Definitívny prechod od mafie k superzločincom. Najlepšia detektívka." },
+                    { id: "16", title: "Dark Victory", type: "k", conn: "Pokračovanie Long Halloween", info: "Zrod prvého Robina (Dick Grayson)." }
+                ]
+            },
+            {
+                title: "Era 3: Rozkvet Mýtu a Pády",
+                desc: "Rozširovanie Bat-rodiny a najväčšie rany osudu.",
+                books: [
+                    { id: "17", title: "Faces", type: "k", conn: "Legends of the Dark Knight", info: "Príbeh s Two-Faceom a jeho dualitou." },
+                    { id: "18", title: "Ego", type: "s", conn: "Psychologická štúdia", info: "Súboj medzi Bruceom Wayneom a Batmanom v jeho mysli." },
+                    { id: "19", title: "The Demon Trilogy", type: "k", conn: "Sága Ra's al Ghula", info: "Batman stretáva svoju najväčšiu nemesis po Jokerovi." },
+                    { id: "20", title: "Second Chances", type: "k", conn: "Zrod Robina II", info: "Príchod Jasona Todda do Bat-rodiny." },
+                    { id: "21", title: "The Killing Joke", type: "k", conn: "Kanonická udalosť", info: "Koniec Barbary Gordon ako Batgirl a Jokerova minulosť." },
+                    { id: "22", title: "Arkham Asylum", type: "s", conn: "Standalone", info: "Vizuálna jazda do hlbín šialenstva v blázinci." },
+                    { id: "23", title: "The Cult", type: "k", conn: "Post-Crisis kánon", info: "Drsný príbeh o tom, ako Deacon Blackfire ovládol Gotham." },
+                    { id: "24", title: "A Death in the Family", type: "k", conn: "Tragédia", info: "Smrť Jasona Todda rukami Jokera. Zásadný moment." },
+                    { id: "25", title: "A Lonely Place of Dying", type: "k", conn: "Nadväzuje na Death in Family", info: "Príchod Tima Drakea, ktorý zachráni Batmana pred ním samým." }
+                ]
+            },
+            {
+                title: "Era 4: Apokalypsa Gothamu",
+                desc: "Obdobie, kedy Batman takmer prišiel o všetko.",
+                books: [
+                    { id: "26", title: "Knightfall", type: "k", conn: "Pád a Vzostup", info: "Bane láme Batmana. Epická sága o páde a návrate." },
+                    { id: "27", title: "Prodigal", type: "k", conn: "Následky Knightfall", info: "Dick Grayson si nakrátko oblieka masku Batmana." },
+                    { id: "28", title: "Contagion", type: "k", conn: "Udalosť", info: "Vražedný vírus zasiahne Gotham." },
+                    { id: "29", title: "Cataclysm", type: "k", conn: "Udalosť", info: "Zemetrasenie, ktoré zničí mesto. Pripravuje pôdu pre NML." },
+                    { id: "30", title: "No Man’s Land", type: "k", conn: "Veľký epos", info: "Gotham ako vojnová zóna, odrezaná od zvyšku USA." },
+                    { id: "31", title: "New Gotham", type: "k", conn: "Po-apo Gotham", info: "Rekonštrukcia mesta a nové policajné prípady." },
+                    { id: "32", title: "Hush", type: "k", conn: "Moderná klasika", info: "Návrat všetkých nepriateľov v jednom veľkom sprisahaní." },
+                    { id: "33", title: "Under the Red Hood", type: "k", conn: "Nadväzuje na Death in Family", info: "Návrat Jasona Todda ako pomstychtivého Red Hooda." }
+                ]
+            },
+            {
+                title: "Era 5: Morrisonova Sága a Konce",
+                desc: "Komplexný záver kánonu a nové začiatky.",
+                books: [
+                    { id: "34", title: "Batman and Son", type: "k", conn: "Štart Morrisonovho behu", info: "Príchod Damiana Waynea, Bruceovho syna." },
+                    { id: "35", title: "Black Glove", type: "k", conn: "Súčasť eposu", info: "Tajná organizácia Black Glove začína útok na Bruceovu psychiku." },
+                    { id: "36", title: "Batman R.I.P.", type: "k", conn: "Vyvrcholenie", info: "Dokončenie útoku na Batmana. Zásadná križovatka." },
+                    { id: "37", title: "Batman and Robin", type: "k", conn: "Nová éra", info: "Dick a Damian ako dynamické duo, kým je Bruce preč." },
+                    { id: "38", title: "Return of Bruce Wayne", type: "k", conn: "Súčasť eposu", info: "Bruceova cesta cez históriu späť do prítomnosti." },
+                    { id: "39", title: "Batman Inc.", type: "k", conn: "Finále Morrisonovho behu", info: "Batman robí z hrdinstva globálnu sieť." },
+                    { id: "40", title: "Court of Owls", type: "r", conn: "Reštart (New 52)", info: "Úplne nový vesmír, kde Batman bojuje s tajným spolkom Gothamu." },
+                    { id: "41", title: "Whatever Happened To The Caped Crusader?", type: "s", conn: "Metaforický koniec", info: "Neil Gaiman píše milostný list celému Batmanovmu mýtu." },
+                    { id: "42", title: "The Dark Knight Returns", type: "s", conn: "Koniec legendy", info: "Možná budúcnosť. Starý Batman sa vracia, aby naposledy nastolil poriadok." }
+                ]
+            }
+        ];
+
+        let progress = JSON.parse(localStorage.getItem('batman_final_db')) || { "3": true }; // Default Year One checked
+
+        function render() {
+            const container = document.getElementById('content');
+            container.innerHTML = '';
+            let total = 0;
+            let read = 0;
+
+            sections.forEach((sec, sIdx) => {
+                const secEl = document.createElement('div');
+                let html = `
+                    <div class="mb-6 flex items-center gap-4">
+                        <div class="h-px bg-zinc-800 flex-1"></div>
+                        <div class="text-center">
+                            <h2 class="bat-font text-sm font-bold text-amber-500 uppercase tracking-widest">${sec.title}</h2>
+                            <p class="text-zinc-600 text-[9px] uppercase font-black">${sec.desc}</p>
+                        </div>
+                        <div class="h-px bg-zinc-800 flex-1"></div>
+                    </div>
+                    <div class="space-y-4">
+                `;
+
+                sec.books.forEach(book => {
+                    total++;
+                    const isRead = progress[book.id] || false;
+                    if(isRead) read++;
+
+                    html += `
+                        <div class="bat-card rounded-2xl p-4 flex gap-4 ${isRead ? 'is-read' : ''}">
+                            <div class="pt-1">
+                                <input type="checkbox" id="${book.id}" ${isRead ? 'checked' : ''} onchange="toggle('${book.id}')">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <h4 class="font-bold text-base leading-tight ${isRead ? 'text-zinc-500 line-through' : 'text-zinc-100'}">${book.title}</h4>
+                                    <span class="type-tag tag-${book.type}">${book.type === 'k' ? 'Kánon' : book.type === 'r' ? 'Reštart' : 'Elseworlds'}</span>
+                                </div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-link text-[10px] text-amber-500/50"></i>
+                                    <p class="text-amber-500/80 text-[9px] font-black uppercase tracking-tighter">${book.conn}</p>
+                                </div>
+                                <p class="text-zinc-500 text-[11px] leading-snug">${book.info}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                secEl.innerHTML = html;
+                container.appendChild(secEl);
+            });
+
+            // UI Updates
+            const perc = Math.round((read/total)*100);
+            document.getElementById('stats-text').innerText = `${read} / ${total} TITULOV`;
+            document.getElementById('perc-display').innerText = `${perc}%`;
+            document.getElementById('perc-bar').style.width = `${perc}%`;
+        }
+
+        window.toggle = (id) => {
+            progress[id] = !progress[id];
+            localStorage.setItem('batman_final_db', JSON.stringify(progress));
+            render();
+        };
+
+        window.onload = render;
+    </script>
+</body>
+</html>
