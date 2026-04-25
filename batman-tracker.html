@@ -37,7 +37,7 @@
         }
 
         .type-tag { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; }
-        .tag-k { background: #1e3a8a; color: #60a5fa; } /* Hlavný kánon */
+        .tag-k { background: #1e3a8a; color: #60a5fa; } /* Hlavný Canon */
         .tag-s { background: #4c1d95; color: #c084fc; } /* Samostatné */
         .tag-r { background: #7f1d1d; color: #f87171; } /* Reštart */
         
@@ -91,7 +91,7 @@
                 books: [
                     { id: "1", title: "The Man Who Falls", type: "k", conn: "Prequel", info: "Bruceov pôvod a cesta po svete. Inšpirácia pre Batman Begins." },
                     { id: "2", title: "The Knight", type: "k", conn: "Moderný Prequel", info: "Detailný pohľad na Bruceov tréning pred Year One." },
-                    { id: "3", title: "Year One", type: "k", conn: "Základ kánonu", info: "Máš hotovo! Bruceov prvý rok a zrod spojenectva s Gordonom." },
+                    { id: "3", title: "Year One", type: "k", conn: "Základ Canonu", info: "Máš hotovo! Bruceov prvý rok a zrod spojenectva s Gordonom." },
                     { id: "4", title: "The Imposter", type: "s", conn: "Elseworlds", info: "Realistická detektívka mimo hlavný vesmír. Temný a surový pohľad." },
                     { id: "5", title: "Shaman", type: "k", conn: "Legends of the Dark Knight", info: "Nadväzuje priamo na Year One. Batman sa učí o mystike." }
                 ]
@@ -123,7 +123,7 @@
                     { id: "20", title: "Second Chances", type: "k", conn: "Zrod Robina II", info: "Príchod Jasona Todda do Bat-rodiny." },
                     { id: "21", title: "The Killing Joke", type: "k", conn: "Kanonická udalosť", info: "Koniec Barbary Gordon ako Batgirl a Jokerova minulosť." },
                     { id: "22", title: "Arkham Asylum", type: "s", conn: "Standalone", info: "Vizuálna jazda do hlbín šialenstva v blázinci." },
-                    { id: "23", title: "The Cult", type: "k", conn: "Post-Crisis kánon", info: "Drsný príbeh o tom, ako Deacon Blackfire ovládol Gotham." },
+                    { id: "23", title: "The Cult", type: "k", conn: "Post-Crisis Canon", info: "Drsný príbeh o tom, ako Deacon Blackfire ovládol Gotham." },
                     { id: "24", title: "A Death in the Family", type: "k", conn: "Tragédia", info: "Smrť Jasona Todda rukami Jokera. Zásadný moment." },
                     { id: "25", title: "A Lonely Place of Dying", type: "k", conn: "Nadväzuje na Death in Family", info: "Príchod Tima Drakea, ktorý zachráni Batmana pred ním samým." }
                 ]
@@ -144,7 +144,7 @@
             },
             {
                 title: "Era 5: Morrisonova Sága a Konce",
-                desc: "Komplexný záver kánonu a nové začiatky.",
+                desc: "Komplexný záver Canonu a nové začiatky.",
                 books: [
                     { id: "34", title: "Batman and Son", type: "k", conn: "Štart Morrisonovho behu", info: "Príchod Damiana Waynea, Bruceovho syna." },
                     { id: "35", title: "Black Glove", type: "k", conn: "Súčasť eposu", info: "Tajná organizácia Black Glove začína útok na Bruceovu psychiku." },
@@ -194,7 +194,7 @@
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
                                     <h4 class="font-bold text-base leading-tight ${isRead ? 'text-zinc-500 line-through' : 'text-zinc-100'}">${book.title}</h4>
-                                    <span class="type-tag tag-${book.type}">${book.type === 'k' ? 'Kánon' : book.type === 'r' ? 'Reštart' : 'Elseworlds'}</span>
+                                    <span class="type-tag tag-${book.type}">${book.type === 'k' ? 'Canon' : book.type === 'r' ? 'Reštart' : 'Elseworlds'}</span>
                                 </div>
                                 <div class="flex items-center gap-2 mb-2">
                                     <i class="fa-solid fa-link text-[10px] text-amber-500/50"></i>
